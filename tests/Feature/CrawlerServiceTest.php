@@ -48,7 +48,7 @@ class CrawlerServiceTest extends TestCase
     {
         foreach($array as $key => $value)
         {
-            if($key >= $numberSmall && $key <= $numberLarge)
+                    if($key >= $numberSmall && $key <= $numberLarge)
             {
                 $array = Arr::except($array, $key);
             }
