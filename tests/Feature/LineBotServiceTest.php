@@ -5,12 +5,16 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Services\LineBotService;
+use LINE\LINEBot\MessageBuilder\MultiMessageBuilder;
 use Tests\TestCase;
+use LINE\LINEBot;
 
 class LineBotServiceTest extends TestCase
 {
     /** @var  LineBotService */
     private $lineBotService;
+
+
 
     public function setUp():void
     {
@@ -25,9 +29,45 @@ class LineBotServiceTest extends TestCase
 
     public function testPushMessage()
     {
-        $this->markTestSkipped('OK!');
-        $response = $this->lineBotService->pushMessage('Test from laravel.');
+//        $this->markTestSkipped('OK!');
+        $response = $this->lineBotService->pushMessage('hello');
 
         $this->assertEquals(200, $response->getHTTPStatus());
     }
+
+
+    public function testPushMessageWithObject()
+    {
+        if (empty(env('LINEBOT_TOKEN'))) {
+            $this->markTestSkipped('Invalid LINEBOT_TOKEN');
+        }
+
+
+        //測試用
+        $json = <<<JSON
+{
+  "type":"bubble",
+  "size":"giga",
+  "direction":"ltr",
+  "header":{
+    "type":"box",
+    "layout":"vertical",
+    "contents":[
+      {"type":"text", "text":"header"}
+    ]
+  }
+}
+JSON;
+
+
+
+        $targets = $this->lineBotService->buildFlexMessageBuilder('test push!',json_decode($json, true));
+
+//        foreach ($targets as $target) {
+            $response = $this->lineBotService->pushMessage($targets);
+//            dd($response);
+            $this->assertEquals(200, $response->getHTTPStatus());
+//        }
+    }
+
 }

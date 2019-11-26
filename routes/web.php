@@ -23,7 +23,7 @@ use App\Services\CrawlerService;
 Route::get('/', function () {
     $crawler = new CrawlerService();
 //    $crawler-> getOriginalData('https://www.taiwanlottery.com.tw/index_new.aspx');
-    $data = $crawler->getPowerNewNumberAllInfomation($crawler->getOriginalData('https://www.taiwanlottery.com.tw/index_new.aspx'));
+    $data = $crawler->getPowerNewNumberAllInformation($crawler->getOriginalData('https://www.taiwanlottery.com.tw/index_new.aspx'));
     dd($data);
 });
 

@@ -32,75 +32,91 @@ class CrawlerServiceTest extends TestCase
     /**
      * @deprecated
      */
-    public function testGetPowerNumberAllInfomation():array
+    public function testGetPowerNumberAllInformation():array
     {
         $crawler = $this->crawlerService->getOriginalData('https://www.taiwanlottery.com.tw/index_new.aspx');
-        $target = $this->crawlerService->getPowerNewNumberAllInfomation($crawler);
+        $target = $this->crawlerService->getPowerNewNumberAllInformation($crawler);
 
         $this->assertArrayHasKey('date', $target[0]);
+        $this->assertArrayHasKey('eventCode', $target[0]);
         $this->assertArrayHasKey('numberOrderTime', $target[0]);
         $this->assertArrayHasKey('numberOrderSize', $target[0]);
         $this->assertArrayHasKey('numberSP', $target[0]);
         dd($target);
     }
 
-    public function numberHandle($array,$numberSmall,$numberLarge):array
-    {
-        foreach($array as $key => $value)
-        {
-                    if($key >= $numberSmall && $key <= $numberLarge)
-            {
-                $array = Arr::except($array, $key);
-            }
-        }
-//        dd($array);
-        return $array;
-    }
-
-    public function testGetNewPowerNormalNumberOrderTime()
-    {
-        $crawler = $this->crawlerService->getOriginalData('https://www.taiwanlottery.com.tw/index_new.aspx');
-        $target = $this->crawlerService->getNewPowerNormalNumberOrderTime($crawler);
-
-        $numberArray  = $target->each(function ($node) {
-            $numbers  = '';
-            $numbers .= $node->html();
-            return $numbers;
-        });
-
-//        print_r($this->numberHandle($numberArray,6,11));
-    }
-    public function testGetNewPowerNormalNumberOrderSize()
-    {
-        $crawler = $this->crawlerService->getOriginalData('https://www.taiwanlottery.com.tw/index_new.aspx');
-        $target = $this->crawlerService->getNewPowerNormalNumberOrderSize($crawler);
-
-        $numberArray = $target->each(function ($node) {
-            $numbers = '';
-            $numbers .= $node->html();
-            return $numbers;
-        });
-//        print_r($this->numberHandle($numberArray,0,5));
-    }
-
-    public function testGetNewPowerSpecialNumber()
-    {
-        $crawler = $this->crawlerService->getOriginalData('https://www.taiwanlottery.com.tw/index_new.aspx');
-        $target = $this->crawlerService->getNewPowerSpecialNumber($crawler);
-
-        $target->each(function ($node) {
-            print_r($node->html());
-        });
-    }
-    public function testGetNewPowerNumberDate()
-    {
-        $crawler = $this->crawlerService->getOriginalData('https://www.taiwanlottery.com.tw/index_new.aspx');
-        $target = $this->crawlerService->getNewPowerNumberDate($crawler);
-
-        $target->each(function ($node) {
-            print_r($node->html());
-        });
-    }
+//    public function numberHandle($array,$numberSmall,$numberLarge):array
+//    {
+//        foreach($array as $key => $value)
+//        {
+//                    if($key >= $numberSmall && $key <= $numberLarge)
+//            {
+//                $array = Arr::except($array, $key);
+//            }
+//        }
+////        dd($array);
+//        return $array;
+//    }
+//    public function dateAndEventCodeDetach($dateData,$key):array
+//    {
+//        $arrays = mb_split("\s",$dateData);
+//        dd($arrays);
+//        $array  =  $key == 0 ?  $arrays[$key] : $arrays[$key];
+//        return $array;
+//    }
+//    public function testGetNewPowerNormalNumberOrderTime()
+//    {
+//        $crawler = $this->crawlerService->getOriginalData('https://www.taiwanlottery.com.tw/index_new.aspx');
+//        $target = $this->crawlerService->getNewPowerNormalNumberOrderTime($crawler);
+//
+//        $numberArray  = $target->each(function ($node) {
+//            $numbers  = '';
+//            $numbers .= $node->html();
+//            return $numbers;
+//        });
+//
+////        print_r($this->numberHandle($numberArray,6,11));
+//    }
+//    public function testGetNewPowerNormalNumberOrderSize()
+//    {
+//        $crawler = $this->crawlerService->getOriginalData('https://www.taiwanlottery.com.tw/index_new.aspx');
+//        $target = $this->crawlerService->getNewPowerNormalNumberOrderSize($crawler);
+//
+//        $numberArray = $target->each(function ($node) {
+//            $numbers = '';
+//            $numbers .= $node->html();
+//            return $numbers;
+//        });
+////        print_r($this->numberHandle($numberArray,0,5));
+//    }
+//
+//    public function testGetNewPowerSpecialNumber()
+//    {
+//        $crawler = $this->crawlerService->getOriginalData('https://www.taiwanlottery.com.tw/index_new.aspx');
+//        $target = $this->crawlerService->getNewPowerSpecialNumber($crawler);
+//
+//        $target->each(function ($node) {
+//            print_r($node->html());
+//        });
+//    }
+//    public function testGetNewPowerNumberDate()
+//    {
+//        $crawler = $this->crawlerService->getOriginalData('https://www.taiwanlottery.com.tw/index_new.aspx');
+//        $target = $this->crawlerService->getNewPowerNumberDate($crawler);
+//
+//        $target->each(function ($node) {
+//            print_r($node->html());
+//        });
+//    }
+//    public function testGetNewPowerNumberEventCode()
+//    {
+//        $crawler = $this->crawlerService->getOriginalData('https://www.taiwanlottery.com.tw/index_new.aspx');
+//        $target = $this->crawlerService->getNewPowerNumberEvntCode($crawler);
+//
+//        $target->each(function ($node) {
+//            print_r($node->html());
+//        });
+//    }
 
 
 }
