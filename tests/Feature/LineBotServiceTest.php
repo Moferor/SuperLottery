@@ -62,7 +62,7 @@ JSON;
 
 
         $targets = $this->lineBotService->buildFlexMessageBuilder('test push!',json_decode($json, true));
-
+//        dd($targets);
 //        foreach ($targets as $target) {
             $response = $this->lineBotService->pushMessage($targets);
 //            dd($response);
