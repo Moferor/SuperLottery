@@ -52,7 +52,7 @@ class CallBacksController extends Controller
                 $text = $event->getText();
                 switch ($message_type) {
                     case 'text':
-                        $bot->replyText($replyToken, 'Hello world!');
+                        $bot->replyText($replyToken, $text);
                         break;
                 }
             }
