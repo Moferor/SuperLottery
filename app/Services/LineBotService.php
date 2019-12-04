@@ -3,9 +3,10 @@
 
 namespace App\Services;
 
-
+//use App\Services\CrawlerService;
 use LINE\LINEBot;
 use LINE\LINEBot\Constant\Flex\BubleContainerSize;
+use LINE\LINEBot\Constant\Flex\ComponentBorderWidth;
 use LINE\LINEBot\Constant\Flex\ComponentButtonHeight;
 use LINE\LINEBot\Constant\Flex\ComponentButtonStyle;
 use LINE\LINEBot\Constant\Flex\ComponentFontSize;
@@ -16,9 +17,12 @@ use LINE\LINEBot\Constant\Flex\ComponentImageAspectRatio;
 use LINE\LINEBot\Constant\Flex\ComponentImageSize;
 use LINE\LINEBot\Constant\Flex\ComponentLayout;
 use LINE\LINEBot\Constant\Flex\ComponentMargin;
+use LINE\LINEBot\Constant\Flex\ComponentPosition;
 use LINE\LINEBot\Constant\Flex\ComponentSpacing;
 use LINE\LINEBot\Constant\Flex\ContainerDirection;
 use LINE\LINEBot\MessageBuilder;
+use LINE\LINEBot\MessageBuilder\Flex\BlockStyleBuilder;
+use LINE\LINEBot\MessageBuilder\Flex\BubbleStylesBuilder;
 use LINE\LINEBot\MessageBuilder\Flex\ComponentBuilder\BoxComponentBuilder;
 use LINE\LINEBot\MessageBuilder\Flex\ComponentBuilder\ButtonComponentBuilder;
 use LINE\LINEBot\MessageBuilder\Flex\ComponentBuilder\IconComponentBuilder;
@@ -45,16 +49,28 @@ class LineBotService
     /** @var LINEBot */
     private $lineBot;
     private $lineUserId;
+    private $crawlerService;
+
 
     public function __construct($lineUserId)
     {
         $this->lineUserId = $lineUserId;
+
         $this->lineBot = app(LINEBot::class);
+//        dd($this->lineBot);
+//        $this->crawlerService = new CrawlerService();
+        $this->crawlerService = app(CrawlerService::class);
     }
 
     public function fake()
     {
     }
+
+
+
+
+
+
 
     /**
      * @param MessageBuilder|string $content
@@ -75,48 +91,79 @@ class LineBotService
     /**
      *
      * @param string $altText
-     * @param array $data
      * @return FlexMessageBuilder
      */
-    public function buildFlexMessageBuilder(string $altText,array $data): FlexMessageBuilder
+    public function buildFlexMessageBuilder(string $altText): FlexMessageBuilder
     {
-        $bubble = $this -> bubbleCreate(
-            $data['size'],
-            $data['direction'],
-            $data['header']
-        );
-        return new FlexMessageBuilder($altText, $bubble);
-    }
-    /**
-     * @param string $size
-     * @param string $direction
-     * @param array $header
-     * @return BubbleContainerBuilder
-     */
-    protected function bubbleCreate(string $size,string $direction,array $header):BubbleContainerBuilder
-    {
-        $bubble = new BubbleContainerBuilder(
-            $direction,
-            $this->boxCreate($header),
-            null,
-            null,
-            null,
-            null,
-            $size
-        );
-        return $bubble;
-    }
-    /**
-     * @param array $header
-     * @return BoxComponentBuilder
-     */
-    protected function boxCreate(array $header):BoxComponentBuilder
-    {
-        $box = new BoxComponentBuilder(
-            $header['layout'],
-            $header['contents']
-        );
-        return $box;
+//        $crawler = $this->crawlerService->getOriginalData('https://www.taiwanlottery.com.tw/index_new.aspx');
+        $crawler = $this->crawlerService->getOriginalData('https://www.taiwanlottery.com.tw/index_new.aspx');
+        $target = $this->crawlerService->getPowerNewNumberAllInformation($crawler);
+        //date
+        //eventCode
+        //numberOrderTime[]
+        //numberOrderSize[]
+        //numberSP
+        $headerBox = $this->createHeardBoxStyle('SuperBall');
+
+
+
+        $builder = BubbleContainerBuilder::builder()
+            ->setDirection(ContainerDirection::LTR)
+            ->setSize(BubleContainerSize::GIGA)
+            ->setHeader($headerBox)
+            ->setHero(new BoxComponentBuilder(ComponentLayout::VERTICAL,
+                [
+                    new TextComponentBuilder($target[0]['date']),
+                    new TextComponentBuilder($target[0]['date'])
+                ]))
+            ->setBody(new BoxComponentBuilder(ComponentLayout::VERTICAL, [new TextComponentBuilder('body')]))
+            ->setFooter(new BoxComponentBuilder(ComponentLayout::VERTICAL, [new TextComponentBuilder('footer')]))
+            ->setStyles(BubbleStylesBuilder::builder()->setBody(new BlockStyleBuilder('#ffffff', true, '#020200')));
+        $builder->setAction(new UriTemplateActionBuilder('OK', 'https://www.taiwanlottery.com.tw/index_new.aspx'));
+        return $flexMessage = new FlexMessageBuilder($altText,$builder);
     }
 
+    /**
+     * @param string $heardTitle
+     * @return BoxComponentBuilder
+     */
+    private function createHeardBoxStyle(string $heardTitle)
+    {
+        $headerBoxStyle = new BoxComponentBuilder(
+            ComponentLayout::VERTICAL,
+            [
+                new TextComponentBuilder(
+                    $heardTitle,
+                    4,
+                    null,
+                    ComponentFontSize::XL,
+                    null,
+                    null,
+                    null,
+                    null,
+                    ComponentFontWeight::BOLD,
+                    '#ffffff',
+                    null
+                )
+            ]);
+
+        $headerBoxStyle->setPaddingAll('20px')
+            ->setPaddingTop('22px')
+//            ->setPaddingBottom('5px')
+//            ->setPaddingStart(ComponentSpacing::LG)
+//            ->setPaddingEnd(ComponentSpacing::XL)
+            ->setBackgroundColor('#0367D3')
+            ->setSpacing(ComponentSpacing::XXL)
+            ->setBorderColor('#000000')
+//            ->setBorderWidth(ComponentBorderWidth::SEMI_BOLD)
+//            ->setCornerRadius(ComponentSpacing::XXL)
+//            ->setPosition(ComponentPosition::RELATIVE)
+//            ->setOffsetTop('4px')
+//            ->setOffsetBottom('4%')
+//            ->setOffsetStart(ComponentSpacing::NONE)
+//            ->setOffsetEnd(ComponentSpacing::SM)
+//            ->setWidth('5px')
+            ->setHeight('80px');
+        return $headerBoxStyle;
+    }
 }

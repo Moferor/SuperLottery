@@ -1,7 +1,5 @@
 <?php
-// app()->singlton('/',function(){
-//        return new App\Service\CrawlerService;
-// });
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,10 +11,10 @@
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
 use App\Services\CrawlerService;
+use App\Http\Controllers\CallBacksController;
+//use Illuminate\Routing\Route;
+
 
 
 
@@ -24,8 +22,10 @@ Route::get('/', function () {
     $crawler = new CrawlerService();
 //    $crawler-> getOriginalData('https://www.taiwanlottery.com.tw/index_new.aspx');
     $data = $crawler->getPowerNewNumberAllInformation($crawler->getOriginalData('https://www.taiwanlottery.com.tw/index_new.aspx'));
-    dd($data);
+//    dd($data);
 });
 
 
-//Route::get('/lottery','LotteryController@show');
+Route::post('/callback','CallBacksController@callback');
+//Route::post('/callback', 'CallBackController@webhook');
+

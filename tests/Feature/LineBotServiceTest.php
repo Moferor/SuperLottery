@@ -5,7 +5,19 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Services\LineBotService;
+use LINE\LINEBot\Constant\Flex\BubleContainerSize;
+use LINE\LINEBot\Constant\Flex\ComponentLayout;
+use LINE\LINEBot\Constant\Flex\ContainerDirection;
+use LINE\LINEBot\MessageBuilder\Flex\BlockStyleBuilder;
+use LINE\LINEBot\MessageBuilder\Flex\BubbleStylesBuilder;
+use LINE\LINEBot\MessageBuilder\Flex\ComponentBuilder\BoxComponentBuilder;
+use LINE\LINEBot\MessageBuilder\Flex\ComponentBuilder\ImageComponentBuilder;
+use LINE\LINEBot\MessageBuilder\Flex\ComponentBuilder\TextComponentBuilder;
+use LINE\LINEBot\MessageBuilder\Flex\ContainerBuilder\BubbleContainerBuilder;
+use LINE\LINEBot\MessageBuilder\Flex\ContainerBuilder\CarouselContainerBuilder;
+use LINE\LINEBot\MessageBuilder\FlexMessageBuilder;
 use LINE\LINEBot\MessageBuilder\MultiMessageBuilder;
+use LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder;
 use Tests\TestCase;
 use LINE\LINEBot;
 
@@ -29,7 +41,7 @@ class LineBotServiceTest extends TestCase
 
     public function testPushMessage()
     {
-//        $this->markTestSkipped('OK!');
+        $this->markTestSkipped('OK!');
         $response = $this->lineBotService->pushMessage('hello');
 
         $this->assertEquals(200, $response->getHTTPStatus());
@@ -43,31 +55,32 @@ class LineBotServiceTest extends TestCase
         }
 
 
-        //測試用
-        $json = <<<JSON
-{
-  "type":"bubble",
-  "size":"giga",
-  "direction":"ltr",
-  "header":{
-    "type":"box",
-    "layout":"vertical",
-    "contents":[
-      {"type":"text", "text":"header"}
-    ]
-  }
-}
-JSON;
 
-
-
-        $targets = $this->lineBotService->buildFlexMessageBuilder('test push!',json_decode($json, true));
-//        dd($targets);
-//        foreach ($targets as $target) {
+//        $builder = new BubbleContainerBuilder(
+//            ContainerDirection::LTR,
+//            new BoxComponentBuilder(ComponentLayout::VERTICAL, [new TextComponentBuilder('header')]),
+//            new BoxComponentBuilder(ComponentLayout::VERTICAL, [new TextComponentBuilder('header')]),
+//            new BoxComponentBuilder(ComponentLayout::VERTICAL, [new TextComponentBuilder('body')]),
+//            new BoxComponentBuilder(ComponentLayout::VERTICAL, [new TextComponentBuilder('footer')]),
+//            BubbleStylesBuilder::builder()->setBody(new BlockStyleBuilder(null, true, '#000000')),
+//            BubleContainerSize::GIGA
+//        );
+//        $aa = json_decode($json,true);
+//
+//        $builder = new BubbleContainerBuilder(ContainerDirection::LTR,$aa);
+//        $builder->setAction(new ImageComponentBuilder('OK', 'http://linecorp.com/'));
+//        $flexMessage = new FlexMessageBuilder('genenenenene',$builder);
+//        dd($flexMessage);
+//        $lineService = app(LineBotService::class);
+//        $lineService->pushMessage( $flexMessage );
+//        dd($flexMessage);
+        $targets = $this->lineBotService->buildFlexMessageBuilder('test push!');
+////        dd($targets);
+////        foreach ($targets as $target) {
             $response = $this->lineBotService->pushMessage($targets);
 //            dd($response);
             $this->assertEquals(200, $response->getHTTPStatus());
-//        }
+////        }
     }
 
 }

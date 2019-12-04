@@ -6,7 +6,7 @@ use App\Services\LineBotService;
 use Illuminate\Support\ServiceProvider;
 use LINE\LINEBot;
 use LINE\LINEBot\HTTPClient\CurlHTTPClient;
-
+use App\Http\Controllers\CallBacksController;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -34,6 +34,8 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(LineBotService::class, function () {
             return new LineBotService(env('LINE_USER_ID'));
+
+//            return env('LINE_USER_ID');
         });
     }
     private function lineBotRegister()
