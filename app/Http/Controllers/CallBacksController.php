@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use LINE\LINEBot;
 use LINE\LINEBot\Constant\HTTPHeader;
 use LINE\LINEBot\Event\MessageEvent;
+use LINE\LINEBot\Event\BaseEvent;
 use LINE\LINEBot\HTTPClient\CurlHTTPClient;
 
 
@@ -45,10 +46,11 @@ class CallBacksController extends Controller
             if ($event instanceof MessageEvent) {
                 $message_type = $event->getMessageType();
                 $userId = $event -> getUserId();
+                $id = $event -> getGroupId();
                 $text = $event->getText();
                 switch ($message_type) {
                     case 'text':
-                        $bot->replyText($replyToken, $userId);
+                        $bot->replyText($replyToken, $id);
                         break;
                 }
             }
