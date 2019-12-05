@@ -44,10 +44,11 @@ class CallBacksController extends Controller
             $replyToken = $event->getReplyToken();
             if ($event instanceof MessageEvent) {
                 $message_type = $event->getMessageType();
+                $userId = $event -> getUserId();
                 $text = $event->getText();
                 switch ($message_type) {
                     case 'text':
-                        $bot->replyText($replyToken, $event);
+                        $bot->replyText($replyToken, $userId);
                         break;
                 }
             }
