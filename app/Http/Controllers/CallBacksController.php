@@ -34,17 +34,12 @@ class CallBacksController extends Controller
     {
         $bot       = $this->bot;
         $signature = $request->header(HTTPHeader::LINE_SIGNATURE);
-//        dd($signature);
         $body      = $request->getContent();
-//        dd($body);
         try {
             $events = $bot->parseEventRequest($body, $signature);
         } catch (\Exception $e) {
-//            dd($e);
             Log::error($e->getMessage());
-//            dd(Log::error($e->getMessage()););
         }
-
         foreach ($events as $event) {
             $replyToken = $event->getReplyToken();
             if ($event instanceof MessageEvent) {
@@ -52,7 +47,7 @@ class CallBacksController extends Controller
                 $text = $event->getText();
                 switch ($message_type) {
                     case 'text':
-                        $bot->replyText($replyToken, $text);
+                        $bot->replyText($replyToken, $replyToken);
                         break;
                 }
             }
